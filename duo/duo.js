@@ -451,7 +451,12 @@
     // Boot EmulatorJS
     const params = new URLSearchParams(location.search);
 
+    // Threads need cross-origin isolation, which the service worker provides
+    const useThreads = window.crossOriginIsolated === true && typeof SharedArrayBuffer === "function" && params.get("threads") !== "0";
+    let starting = false;
+
     function start(gameUrl, name) {
+        starting = true;
         render();
         const game = document.createElement("div");
         game.id = "game";
@@ -473,8 +478,10 @@
         window.EJS_color = getComputedStyle(document.body).getPropertyValue("--accent").trim();
         window.EJS_DEBUG_XX = params.get("debug") === "1";
         window.EJS_askBeforeExit = false;
+        window.EJS_threads = useThreads;
         window.EJS_defaultOptions = Object.assign({
             "melonds_touch_mode": "Touch",
+            "melonds_threaded_renderer": useThreads ? "enabled" : "disabled",
             "virtual-gamepad": "disabled",
             "menu-bar-button": "hidden"
         }, opts);
@@ -509,6 +516,18 @@
     });
 
     if (params.get("rom")) start("roms/" + params.get("rom"), params.get("rom"));
+
+    if ("serviceWorker" in navigator) {
+        // Reload once when the worker first takes over so the page becomes isolated
+        navigator.serviceWorker.addEventListener("controllerchange", () => {
+            let reloaded = false;
+            try { reloaded = sessionStorage.getItem("duo-ds-isolated") === "1"; } catch (e) {}
+            if (window.crossOriginIsolated || starting || reloaded) return;
+            try { sessionStorage.setItem("duo-ds-isolated", "1"); } catch (e) {}
+            location.reload();
+        });
+        navigator.serviceWorker.register("sw.js").catch(() => {});
+    }
 
     render();
 })();
