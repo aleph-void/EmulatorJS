@@ -62,8 +62,8 @@
 
     // Start/Select/Menu: at least a 44px touch target, with the label fitted to the width
     function smallButton(ctl, width) {
-        const dot = clamp(ctl * 0.34, 24, 32);
-        const font = clamp(Math.min(dot * 0.48, (width - dot - 6) / 4.6), 10, 14);
+        const dot = clamp(Math.min(ctl * 0.34, width * 0.3), 18, 32);
+        const font = clamp(Math.min(dot * 0.48, (width - dot - 4) / 5.5), 8, 14);
         return { h: Math.max(44, dot + 12), dot, font };
     }
 
@@ -103,13 +103,13 @@
         const leftCx = x0 + sideW / 2;
         const rightCx = x0 + FW - sideW / 2;
         const ctl = clamp(Math.min(sideW * 0.86, botInner * 0.5), 64, 170);
-        const colW = sideW - 8;
+        const smallInset = clamp(sideW * 0.12, 8, 16);
+        const colW = sideW - smallInset * 2;
         const small = smallButton(ctl, colW);
         const dpad = centered(leftCx, bottom.y + bottom.h * 0.42, ctl, ctl);
-        const face = centered(rightCx, bottom.y + bottom.h * 0.38, ctl, ctl);
+        const face = centered(rightCx, bottom.y + bottom.h * 0.42, ctl, ctl);
         const maxBottom = botArea.y + botArea.h - pad * 0.5;
         const startY = Math.min(face.y + face.h + 2, maxBottom - small.h * 2);
-        const menuY = Math.min(dpad.y + dpad.h + 2, maxBottom - small.h);
         const bezelPad = clamp(s * 6, 5, 14);
         const shoulderW = clamp(sideW * 0.75, 50, 130);
 
@@ -131,9 +131,9 @@
             dpad,
             face,
             small,
-            start: rect(x0 + FW - sideW + 4, startY, colW, small.h),
-            select: rect(x0 + FW - sideW + 4, startY + small.h, colW, small.h),
-            menu: rect(x0 + 4, menuY, colW, small.h),
+            start: rect(x0 + FW - sideW + smallInset, startY, colW, small.h),
+            select: rect(x0 + FW - sideW + smallInset, startY + small.h, colW, small.h),
+            menu: rect(x0 + smallInset, startY, colW, small.h),
             menuSide: "right"
         };
     }
