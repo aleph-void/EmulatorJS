@@ -60,6 +60,13 @@
         return { mode: "stacked", start: H / 2, end: H / 2, real: false };
     }
 
+    // Start/Select/Menu: at least a 44px touch target, with the label fitted to the width
+    function smallButton(ctl, width) {
+        const dot = clamp(ctl * 0.34, 24, 32);
+        const font = clamp(Math.min(dot * 0.48, (width - dot - 6) / 4.6), 10, 14);
+        return { h: Math.max(44, dot + 12), dot, font };
+    }
+
     function stackedLayout(W, H, fold, inset) {
         const FW = Math.min(W, H * 0.95);
         const x0 = (W - FW) / 2;
@@ -96,7 +103,13 @@
         const leftCx = x0 + sideW / 2;
         const rightCx = x0 + FW - sideW / 2;
         const ctl = clamp(Math.min(sideW * 0.86, botInner * 0.5), 64, 170);
-        const smallH = clamp(ctl * 0.2, 18, 28);
+        const colW = sideW - 8;
+        const small = smallButton(ctl, colW);
+        const dpad = centered(leftCx, bottom.y + bottom.h * 0.42, ctl, ctl);
+        const face = centered(rightCx, bottom.y + bottom.h * 0.38, ctl, ctl);
+        const maxBottom = botArea.y + botArea.h - pad * 0.5;
+        const startY = Math.min(face.y + face.h + 2, maxBottom - small.h * 2);
+        const menuY = Math.min(dpad.y + dpad.h + 2, maxBottom - small.h);
         const bezelPad = clamp(s * 6, 5, 14);
         const shoulderW = clamp(sideW * 0.75, 50, 130);
 
@@ -115,11 +128,12 @@
             led: centered(rightCx, botArea.y + barH / 2, 6, 6),
             l: centered(x0 + pad + shoulderW / 2, botArea.y + barH / 2 + 2, shoulderW, barH * 0.72),
             r: centered(x0 + FW - pad - shoulderW / 2, botArea.y + barH / 2 + 2, shoulderW, barH * 0.72),
-            dpad: centered(leftCx, bottom.y + bottom.h * 0.42, ctl, ctl),
-            face: centered(rightCx, bottom.y + bottom.h * 0.38, ctl, ctl),
-            start: rect(rightCx - ctl * 0.5, bottom.y + bottom.h * 0.38 + ctl * 0.55, ctl, smallH),
-            select: rect(rightCx - ctl * 0.5, bottom.y + bottom.h * 0.38 + ctl * 0.55 + smallH * 1.3, ctl, smallH),
-            menu: rect(leftCx - ctl * 0.5, bottom.y + bottom.h * 0.42 + ctl * 0.55 + smallH * 0.65, ctl, smallH),
+            dpad,
+            face,
+            small,
+            start: rect(x0 + FW - sideW + 4, startY, colW, small.h),
+            select: rect(x0 + FW - sideW + 4, startY + small.h, colW, small.h),
+            menu: rect(x0 + 4, menuY, colW, small.h),
             menuSide: "right"
         };
     }
@@ -145,8 +159,8 @@
         const cy = lowerY + lowerH / 2;
         const leftCx = inset.left + leftW * 0.36;
         const rightCx = W - inset.right - rightW * 0.36;
-        const smallH = clamp(ctl * 0.2, 18, 28);
         const smallW = ctl * 0.9;
+        const small = smallButton(ctl, smallW);
         const smallLX = leftCx + ctl * 0.6;
         const smallRX = rightCx - ctl * 0.6 - smallW;
         const bezelPad = clamp(s * 6, 5, 14);
@@ -169,9 +183,10 @@
             r: centered(W - inset.right - pad - shoulderW / 2, inset.top + barH / 2 + 2, shoulderW, barH * 0.65),
             dpad: centered(leftCx, cy, ctl, ctl),
             face: centered(rightCx, cy, ctl, ctl),
-            start: rect(smallRX, cy - smallH * 1.4, smallW, smallH),
-            select: rect(smallLX, cy - smallH * 1.4, smallW, smallH),
-            menu: rect(smallLX, cy + smallH * 0.4, smallW, smallH),
+            small,
+            start: rect(smallRX, cy - small.h - 4, smallW, small.h),
+            select: rect(smallLX, cy - small.h - 4, smallW, small.h),
+            menu: rect(smallLX, cy + 4, smallW, small.h),
             menuSide: "right"
         };
     }
@@ -217,7 +232,8 @@
         place(controls.querySelector('[data-input="3"]'), L.start);
         place(controls.querySelector('[data-input="2"]'), L.select);
         place(controls.querySelector('[data-action="menu"]'), L.menu);
-        controls.querySelectorAll(".small").forEach((el) => el.style.fontSize = (L.start.h * 0.48) + "px");
+        controls.querySelectorAll(".small").forEach((el) => el.style.fontSize = L.small.font + "px");
+        controls.style.setProperty("--dot", L.small.dot + "px");
 
         const c = L.canvas;
         root.style.setProperty("--cv-x", c.x + "px");
