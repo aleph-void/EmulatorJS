@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Duo DS</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+        <meta name="theme-color" content="#101014">
+        <link rel="icon" href="docs/favicon.ico" sizes="16x16 32x32 48x48 64x64" type="image/vnd.microsoft.icon">
+        <link rel="stylesheet" href="duo/duo.css">
+    </head>
+
+    <body data-theme="red">
+        <div id="shell" aria-hidden="true">
+            <div class="half lid"></div>
+            <div class="half base"></div>
+            <div class="hinge"></div>
+            <div class="bezel bezel-top"></div>
+            <div class="bezel bezel-bottom"></div>
+            <div class="speaker speaker-l"></div>
+            <div class="speaker speaker-r"></div>
+            <div class="led"></div>
+        </div>
+
+        <div id="screen-top" class="screen">
+            <div class="title">
+                <div class="title-logo">DUO<span>DS</span></div>
+                <div class="title-sub">Dual-screen emulator for foldables</div>
+            </div>
+        </div>
+
+        <div id="screen-bottom" class="screen">
+            <label class="load-button">
+                <input type="file" id="rom-input" accept=".nds,.zip,.7z">
+                <span class="load-icon">&#9654;</span>
+                <span>Load .nds ROM</span>
+            </label>
+            <div class="themes" role="radiogroup" aria-label="Theme">
+                <button type="button" class="swatch" data-theme="red" aria-label="Nintendo Red"></button>
+                <button type="button" class="swatch" data-theme="neon" aria-label="Neon"></button>
+                <button type="button" class="swatch" data-theme="famicom" aria-label="Famicom"></button>
+                <button type="button" class="swatch" data-theme="dmg" aria-label="Classic Grey"></button>
+            </div>
+            <div class="hint">ROMs stay on this device</div>
+        </div>
+
+        <div id="controls">
+            <div class="shoulder" data-input="10">L</div>
+            <div class="shoulder" data-input="11">R</div>
+            <div class="dpad">
+                <span class="dpad-arm dpad-h"></span>
+                <span class="dpad-arm dpad-v"></span>
+                <span class="dpad-dimple"></span>
+            </div>
+            <div class="face">
+                <span class="face-btn" data-input="9" data-key="x">X</span>
+                <span class="face-btn" data-input="1" data-key="y">Y</span>
+                <span class="face-btn" data-input="8" data-key="a">A</span>
+                <span class="face-btn" data-input="0" data-key="b">B</span>
+            </div>
+            <div class="small" data-input="3"><i></i><b>START</b></div>
+            <div class="small" data-input="2"><i></i><b>SELECT</b></div>
+            <div class="small" data-action="menu"><i></i><b>MENU</b></div>
+        </div>
+
+        <script src="duo/duo.js"></script>
+    </body>
+</html>
