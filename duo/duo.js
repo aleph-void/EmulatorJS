@@ -496,9 +496,16 @@
         document.body.appendChild(script);
     }
 
+    // No accept filter: iOS greys out extensions it has no file type for, like .nds
     $("#rom-input").addEventListener("change", (e) => {
         const file = e.target.files[0];
-        if (file) start(file, file.name);
+        if (!file) return;
+        if (!/\.(nds|zip|7z)$/i.test(file.name)) {
+            $(".hint").textContent = "Pick a .nds, .zip or .7z file";
+            e.target.value = "";
+            return;
+        }
+        start(file, file.name);
     });
 
     if (params.get("rom")) start("roms/" + params.get("rom"), params.get("rom"));
