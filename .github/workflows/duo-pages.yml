@@ -31,6 +31,7 @@ jobs:
           mkdir -p _site/data/cores _site/docs
           cp duo.html _site/index.html
           cp -r duo _site/duo
+          cp duo/sw.js _site/sw.js
           cp docs/favicon.ico _site/docs/
           cp -r data/compression data/localization data/src _site/data/
           cp data/loader.js data/version.json data/emulator.css data/emulator.min.js data/emulator.min.css _site/data/
