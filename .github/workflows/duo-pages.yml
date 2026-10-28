@@ -1,7 +1,7 @@
 name: Deploy Duo DS to GitHub Pages
 on:
   push:
-    branches: ["main"]
+    branches: ["main", "claude/eloquent-brahmagupta-k1aod9"]
   workflow_dispatch:
 permissions:
   contents: read
